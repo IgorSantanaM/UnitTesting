@@ -17,7 +17,7 @@ namespace Users.Api.Tests.Unit;
 
 public class UserControllerTests
 {
-    private readonly UserController _sut;
+    private readonly UserController _sut; // System Under Test
     private readonly IUserService _userService = Substitute.For<IUserService>();
 
     public UserControllerTests()
@@ -94,12 +94,12 @@ public class UserControllerTests
     }
 
     [Fact]
-    public async Task Create_ShouldCreateUser_WhenCreateUserRequestIsValid()
+    public async Task Create_ReturnsCreated_WhenUserWasCreated()
     {
         // Arrange
         var createUserRequest = new CreateUserRequest
         {
-            FullName = "Nick Chapsas"
+            FullName = "Igor Medeiros"
         };
         var user = new User
         {
@@ -112,36 +112,34 @@ public class UserControllerTests
         // Act
         var result = (CreatedAtActionResult)await _sut.Create(createUserRequest);
 
-        // Assert
+        // Assert 
         var expectedUserResponse = user.ToUserResponse();
         result.StatusCode.Should().Be(201);
         result.Value.As<UserResponse>().Should().BeEquivalentTo(expectedUserResponse);
-        result.RouteValues!["id"].Should().BeEquivalentTo(user.Id);
-
-        // result.Value.As<UserResponse>().Should()
-        //     .BeEquivalentTo(expectedUserResponse, options => options.Excluding(x => x.Id));
+        result.RouteValues!["Id"].Should().BeEquivalentTo(expectedUserResponse.Id); 
     }
 
     [Fact]
-    public async Task Create_ShouldReturnBadRequest_WhenCreateUserRequestIsInvalid()
+    public async Task Create_ShouldReturnBadRequest_WhenUserWasntCreated()
     {
         // Arrange
         _userService.CreateAsync(Arg.Any<User>()).Returns(false);
 
         // Act
-        var result = (BadRequestResult) await _sut.Create(new CreateUserRequest());
+        var result = (BadRequestResult)await _sut.Create(new CreateUserRequest());
 
-        // Assert
+        // Asset
         result.StatusCode.Should().Be(400);
+
     }
 
     [Fact]
-    public async Task DeleteById_ReturnsOk_WhenUserWasDeleted()
+    public async Task DeleById_ReturnsOk_WhenUserWasDeleted()
     {
         // Arrange
         _userService.DeleteByIdAsync(Arg.Any<Guid>()).Returns(true);
 
-        // Act
+        // Act 
         var result = (OkResult)await _sut.DeleteById(Guid.NewGuid());
 
         // Assert
@@ -149,15 +147,16 @@ public class UserControllerTests
     }
 
     [Fact]
-    public async Task DeleteById_ReturnsNotFound_WhenUserWasNotDeleted()
+    public async Task DeleById_ReturnsNotFound_WhenUserWasNotDeleted()
     {
         // Arrange
         _userService.DeleteByIdAsync(Arg.Any<Guid>()).Returns(false);
 
-        // Act
+        // Act 
         var result = (NotFoundResult)await _sut.DeleteById(Guid.NewGuid());
 
         // Assert
+
         result.StatusCode.Should().Be(404);
     }
 }

@@ -41,7 +41,7 @@ public class CalculatorTests
         Assert.Equal(expectedResult, result);
     }
 
-    public static IEnumerable<object[]> AddTestData =>
+    public static IEnumerable<object[]> AddTestData => // MemberData => Creates a Method to share data.
         new List<object[]>
         {
             new object[] { 5, 5, 10 },
@@ -50,7 +50,7 @@ public class CalculatorTests
         };
 }
 
-public class CalculatorSubtractTestData : IEnumerable<object[]>
+public class CalculatorSubtractTestData : IEnumerable<object[]> // ClassData  => Craetes a class to share the data.
 {
     public IEnumerator<object[]> GetEnumerator()
     {

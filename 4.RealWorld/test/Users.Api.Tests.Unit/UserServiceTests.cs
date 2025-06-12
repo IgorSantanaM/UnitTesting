@@ -111,12 +111,13 @@ public class UserServiceTests
     [Fact]
     public async Task GetByIdAsync_ShouldReturnUser_WhenUserExists()
     {
-        // Arrange
+        // Arrange 
         var existingUser = new User
         {
             Id = Guid.NewGuid(),
-            FullName = "Nick Chapsas"
+            FullName = "Igor Santana"
         };
+
         _userRepository.GetByIdAsync(existingUser.Id).Returns(existingUser);
 
         // Act
@@ -129,7 +130,6 @@ public class UserServiceTests
     [Fact]
     public async Task GetByIdAsync_ShouldLogMessages_WhenInvoked()
     {
-        // Arrange
         var userId = Guid.NewGuid();
         _userRepository.GetByIdAsync(userId).ReturnsNull();
 
@@ -146,7 +146,8 @@ public class UserServiceTests
     [Fact]
     public async Task GetByIdAsync_ShouldLogMessageAndException_WhenExceptionIsThrown()
     {
-        // Arrange
+
+         // Arrange
         var userId = Guid.NewGuid();
         var sqliteException = new SqliteException("Something went wrong", 500);
         _userRepository.GetByIdAsync(userId)
